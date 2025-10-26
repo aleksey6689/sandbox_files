@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-server
+  labels:
+    app: health-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-server
+  template:
+    metadata:
+      labels:
+        app: health-server
+    spec:
+      containers:
+        - name: health-server
+          image: docker.io/library/health-server:alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health_check
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health_check
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: health-server
+  labels:
+    app: health-server
+spec:
+  selector:
+    app: health-server
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
