@@ -6,22 +6,19 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://obsidiandynamics.github.io/charts
+    repoURL: https://charts.deliveryhero.io/
     chart: kafdrop
-    targetRevision: "*"          # взять последнюю доступную версию чарта
+    targetRevision: "*"          # последняя доступная версия чарта
     helm:
       releaseName: kafdrop
       values: |
         kafka:
-          brokerConnect: "kafka:9092"   # адрес брокера внутри кластера
-        server:
-          servlet:
-            contextPath: "/"
-        jvm:
-          opts: "-Xms128m -Xmx256m"     # чуть ограничим память для minikube
+          brokerConnect: "kafka:9092"
         service:
-          type: NodePort                 # удобно открыть через minikube service
+          type: NodePort
           port: 9000
+        jvm:
+          opts: "-Xms128m -Xmx256m"
   destination:
     server: https://kubernetes.default.svc
     namespace: default
