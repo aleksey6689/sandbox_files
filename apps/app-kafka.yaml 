@@ -1,0 +1,31 @@
+global:
+  security:
+    allowInsecureImages: true  # чарт не будет блокировать "нестандартые" образы
+
+image:
+  registry: docker.io
+  repository: bitnamilegacy/kafka
+  tag: 4.0.0-debian-12-r10  # проверенный legacy-тег
+  pullPolicy: IfNotPresent
+
+kraft:
+  enabled: true
+
+persistence:
+  enabled: false           
+
+listeners:
+  client:
+    protocol: PLAINTEXT
+
+controller:
+  replicaCount: 1
+broker:
+  replicaCount: 1
+
+provisioning:
+  enabled: true
+  topics:
+    - name: health-events
+      partitions: 1
+      replicationFactor: 1
