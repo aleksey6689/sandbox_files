@@ -6,14 +6,14 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.deliveryhero.io/
+    repoURL: https://tchiotludo.github.io/kafdrop-chart
     chart: kafdrop
-    targetRevision: "*"          # последняя доступная версия чарта
+    targetRevision: "*"              # последняя версия чарта
     helm:
       releaseName: kafdrop
       values: |
         kafka:
-          brokerConnect: "kafka:9092"
+          brokerConnect: "kafka:9092"  # сервис Kafka внутри кластера
         service:
           type: NodePort
           port: 9000
