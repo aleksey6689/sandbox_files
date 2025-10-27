@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: health-server
-          image: health-server:latest   # ты грузишь в minikube
+          image: health-server:alpine
           imagePullPolicy: IfNotPresent
           ports: [{ containerPort: 8080 }]
           readinessProbe:
