@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-server
+  labels: { app: health-server }
+spec:
+  replicas: 3
+  selector: { matchLabels: { app: health-server } }
+  template:
+    metadata: { labels: { app: health-server } }
+    spec:
+      containers:
+        - name: health-server
+          image: health-server:latest   # ты грузишь в minikube
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8080 }]
+          readinessProbe:
+            httpGet: { path: /health_check, port: 8080 }
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health_check, port: 8080 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
