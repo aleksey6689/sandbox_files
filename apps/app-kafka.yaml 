@@ -1,31 +1,52 @@
-global:
-  security:
-    allowInsecureImages: true  # чарт не будет блокировать "нестандартые" образы
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    chart: kafka
+    targetRevision: 32.4.3
+    helm:
+      releaseName: kafka
+      values: |
+        global:
+          security:
+            allowInsecureImages: true
 
-image:
-  registry: docker.io
-  repository: bitnamilegacy/kafka
-  tag: 4.0.0-debian-12-r10  # проверенный legacy-тег
-  pullPolicy: IfNotPresent
+        image:
+          registry: docker.io
+          repository: bitnamilegacy/kafka
+          tag: 4.0.0-debian-12-r10 
+          pullPolicy: IfNotPresent
 
-kraft:
-  enabled: true
+        kraft:
+          enabled: true
 
-persistence:
-  enabled: false           
+        persistence:
+          enabled: false
 
-listeners:
-  client:
-    protocol: PLAINTEXT
+        listeners:
+          client:
+            protocol: PLAINTEXT
 
-controller:
-  replicaCount: 1
-broker:
-  replicaCount: 1
+        controller:
+          replicaCount: 1
+        broker:
+          replicaCount: 1
 
-provisioning:
-  enabled: true
-  topics:
-    - name: health-events
-      partitions: 1
-      replicationFactor: 1
+        provisioning:
+          enabled: true
+          topics:
+            - name: health-events
+              partitions: 1
+              replicationFactor: 1
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
