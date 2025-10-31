@@ -4,7 +4,7 @@ metadata:
   name: kafdrop
   namespace: argocd
 spec:
-  project: tools
+  project: default
   source:
     repoURL: https://github.com/obsidiandynamics/kafdrop.git
     targetRevision: HEAD
@@ -12,13 +12,17 @@ spec:
     helm:
       releaseName: kafdrop
       values: |
+        global: 
+          security:
+            allowInsecureImages: true
+
         image:
           repository: obsidiandynamics/kafdrop
-          tag: "4.0.2"          # подставьте нужную версию образа
+          tag: "4.0.2"
           pullPolicy: IfNotPresent
 
         kafka:
-          brokerConnect: "kafka-0:9092,kafka-1:9092,kafka-2:9092"
+          brokerConnect: "kafka-broker-0.kafka-broker-headless.default.svc.cluster.local:9094"
           # properties: |
           #   security.protocol=SASL_SSL
           #   sasl.mechanism=PLAIN
