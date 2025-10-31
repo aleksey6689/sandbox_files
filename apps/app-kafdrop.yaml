@@ -22,7 +22,7 @@ spec:
           pullPolicy: IfNotPresent
 
         kafka:
-          brokerConnect: "kafka-broker-0.kafka-broker-headless.default.svc.cluster.local:9094"
+          brokerConnect: "kafka-broker-0.kafka-broker-headless.default.svc.cluster.local:9092"
           # properties: |
           #   security.protocol=SASL_SSL
           #   sasl.mechanism=PLAIN
