@@ -4,7 +4,7 @@ metadata:
   name: kafdrop
   namespace: argocd
 spec:
-  project: default
+  project: tools
   source:
     repoURL: https://github.com/obsidiandynamics/kafdrop.git
     targetRevision: HEAD
@@ -36,8 +36,9 @@ spec:
           opts: "-Xms128M -Xmx256M"
 
         service:
-          type: ClusterIP
+          type: NodePort
           port: 9000
+          nodePort: 32090
 
         ingress:
           enabled: false
