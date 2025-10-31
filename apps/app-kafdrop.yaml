@@ -4,7 +4,7 @@ metadata:
   name: kafdrop
   namespace: argocd
 spec:
-  project: tools
+  project: default
   source:
     repoURL: https://github.com/obsidiandynamics/kafdrop.git
     targetRevision: HEAD
