@@ -4,25 +4,60 @@ metadata:
   name: kafdrop
   namespace: argocd
 spec:
-  project: default
+  project: tools
   source:
-    repoURL: https://github.com/obsidiandynamics/kafdrop/tree/master/chart
-    chart: kafdrop
-    targetRevision: "*"              # последняя версия чарта
+    repoURL: https://github.com/obsidiandynamics/kafdrop.git
+    targetRevision: HEAD
+    path: chart
     helm:
       releaseName: kafdrop
       values: |
+        image:
+          repository: obsidiandynamics/kafdrop
+          tag: "4.0.2"          # подставьте нужную версию образа
+          pullPolicy: IfNotPresent
+
         kafka:
-          brokerConnect: "kafka:9092"  # сервис Kafka внутри кластера
-        service:
-          type: NodePort
-          port: 9000
+          brokerConnect: "kafka-0:9092,kafka-1:9092,kafka-2:9092"
+          # properties: |
+          #   security.protocol=SASL_SSL
+          #   sasl.mechanism=PLAIN
+          #   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="user" password="pass";
+
+        server:
+          servlet:
+            contextPath: "/"
+
         jvm:
-          opts: "-Xms128m -Xmx256m"
+          opts: "-Xms128M -Xmx256M"
+
+        service:
+          type: ClusterIP
+          port: 9000
+
+        ingress:
+          enabled: false
+          className: ""
+          hosts:
+            - host: "kafdrop.example.com"
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls: []
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: tools
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
