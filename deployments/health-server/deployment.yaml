@@ -11,8 +11,7 @@ spec:
     spec:
       containers:
         - name: health-server
-          image: health-server:alpine
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/aleksey6689/my-app:latest
           ports: [{ containerPort: 8080 }]
           readinessProbe:
             httpGet: { path: /health_check, port: 8080 }
