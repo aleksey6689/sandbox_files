@@ -21,3 +21,9 @@ spec:
             httpGet: { path: /health_check, port: 8080 }
             initialDelaySeconds: 5
             periodSeconds: 10
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka:9092"
+            - name: KAFKA_TOPIC
+              value: "health-events"
+
